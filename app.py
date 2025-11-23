@@ -1,10 +1,9 @@
 from flask import Flask, render_template, request
 import requests
-import os
 
 app = Flask(__name__)
 
-API_KEY = os.getenv("API_KEY")
+API_KEY = "cb6ffc313a4970c3110fb44b919cc341"
 
 HEADERS = {
     "x-apisports-key": API_KEY
@@ -24,13 +23,12 @@ def index():
                 PLAYER_SEARCH_URL.format(player),
                 headers=HEADERS
             )
-
             data = response.json()
         except:
             data = {"response": []}
 
         if "response" in data and data["response"]:
-            stats = data["response"][0]  # Primer jugador encontrado
+            stats = data["response"][0]
         else:
             stats = None
 
