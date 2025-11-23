@@ -2,35 +2,80 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>NBA Stats</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscador NBA</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: #eee;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        .form-box {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #4CAF50;
+            border: none;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .card {
+            background: #222;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            margin: 20px auto;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Buscar jugador NBA</h2>
+    <h1>Buscador de Jugadores NBA</h1>
 
-<form method="POST">
-    <input type="text" name="player" placeholder="Ej: LeBron James" required>
-    <button type="submit">Buscar</button>
-</form>
+    <div class="form-box">
+        <form method="POST">
+            <input type="text" name="player" placeholder="Ejemplo: LeBron James">
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
 
-<hr>
+    {% if stats %}
+    <div class="card">
+        <h2>{{ stats.firstname }} {{ stats.lastname }}</h2>
 
-{% if error %}
-<p style="color:red;">{{ error }}</p>
-{% endif %}
+        {% if stats.team %}
+            <p><strong>Equipo:</strong> {{ stats.team.name }}</p>
+        {% endif %}
 
-{% if stats %}
-<h3>{{ stats.player.firstname }} {{ stats.player.lastname }}</h3>
-<p>Edad: {{ stats.player.age }}</p>
-<p>Equipo: {{ stats.team.name }}</p>
-<p>Altura: {{ stats.player.height }}</p>
-<p>Peso: {{ stats.player.weight }}</p>
-
-<h4>Última temporada</h4>
-<p>Puntos: {{ stats.statistics.points }}</p>
-<p>Rebotes: {{ stats.statistics.rebounds }}</p>
-<p>Asistencias: {{ stats.statistics.assists }}</p>
-{% endif %}
+        <p><strong>Altura:</strong> {{ stats.height }} cm</p>
+        <p><strong>Peso:</strong> {{ stats.weight }} kg</p>
+        <p><strong>Edad:</strong> {{ stats.age }}</p>
+    </div>
+    {% else %}
+        {% if stats is not none %}
+            <p style="text-align:center; color:red;">Jugador no encontrado</p>
+        {% endif %}
+    {% endif %}
 
 </body>
 </html>
