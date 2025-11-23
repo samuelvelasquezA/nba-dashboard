@@ -1,14 +1,16 @@
 from flask import Flask, render_template, request
 import requests
+import os
 
 app = Flask(__name__)
 
-API_KEY = "cb6ffc313a4970c3110fb44b919cc341"  # tu llave
-BASE_URL = "https://v1.basketball.api-sports.io/players?search={}"
+API_KEY = os.getenv("API_KEY")
 
-headers = {
+HEADERS = {
     "x-apisports-key": API_KEY
 }
+
+PLAYER_SEARCH_URL = "https://v1.basketball.api-sports.io/players?search={}"
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -18,22 +20,19 @@ def index():
         player = request.form["player"]
 
         try:
-            url = BASE_URL.format(player)
-            response = requests.get(url, headers=headers)
+            response = requests.get(
+                PLAYER_SEARCH_URL.format(player),
+                headers=HEADERS
+            )
 
-            if response.status_code == 200:
-                data = response.json()
-            else:
-                data = {"response": []}
-
+            data = response.json()
         except:
             data = {"response": []}
 
-        # la API de API-SPORTS devuelve "response"
-        if data.get("response"):
-            stats = data["response"][0]
+        if "response" in data and data["response"]:
+            stats = data["response"][0]  # Primer jugador encontrado
         else:
-            stats = {"name": "No encontrado"}
+            stats = None
 
     return render_template("index.html", stats=stats)
 
