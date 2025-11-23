@@ -2,65 +2,35 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Buscar Jugador NBA</title>
-    <style>
-        body {
-            background: #111;
-            color: white;
-            font-family: Arial;
-            padding: 20px;
-        }
-        .card {
-            background: #222;
-            padding: 20px;
-            border-radius: 10px;
-            width: 400px;
-            margin-top: 20px;
-        }
-        input {
-            padding: 10px;
-            width: 300px;
-        }
-        button {
-            padding: 10px;
-            background: #4CAF50;
-            border: none;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #45a049;
-        }
-    </style>
+    <title>NBA Stats</title>
 </head>
 <body>
 
-<h1>Buscar jugador NBA</h1>
+<h2>Buscar jugador NBA</h2>
 
 <form method="POST">
-    <input type="text" name="player" placeholder="Ejemplo: LeBron James" required>
+    <input type="text" name="player" placeholder="Ej: LeBron James" required>
     <button type="submit">Buscar</button>
 </form>
 
+<hr>
+
+{% if error %}
+<p style="color:red;">{{ error }}</p>
+{% endif %}
+
 {% if stats %}
-<div class="card">
-    {% if stats.name == "No encontrado" %}
-        <p><strong>Jugador no encontrado</strong></p>
-    {% else %}
-        <p><strong>Nombre:</strong> {{ stats.first_name }} {{ stats.last_name }}</p>
+<h3>{{ stats.player.firstname }} {{ stats.player.lastname }}</h3>
+<p>Edad: {{ stats.player.age }}</p>
+<p>Equipo: {{ stats.team.name }}</p>
+<p>Altura: {{ stats.player.height }}</p>
+<p>Peso: {{ stats.player.weight }}</p>
 
-        {% if stats.team %}
-            <p><strong>Equipo:</strong> {{ stats.team.full_name }}</p>
-        {% endif %}
-
-        <p><strong>Posición:</strong> {{ stats.position if stats.position else "N/A" }}</p>
-        <p><strong>Altura:</strong> {{ stats.height_feet if stats.height_feet else "?" }} ft {{ stats.height_inches if stats.height_inches else "?" }} in</p>
-        <p><strong>Peso:</strong> {{ stats.weight_pounds if stats.weight_pounds else "?" }} lbs</p>
-    {% endif %}
-</div>
+<h4>Última temporada</h4>
+<p>Puntos: {{ stats.statistics.points }}</p>
+<p>Rebotes: {{ stats.statistics.rebounds }}</p>
+<p>Asistencias: {{ stats.statistics.assists }}</p>
 {% endif %}
 
 </body>
 </html>
-
-     
