@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NBA Dashboard</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+
+<h1>NBA Dashboard (Versión Base)</h1>
+
+<form method="POST">
+    <input type="text" name="player" placeholder="Escribe un jugador (ej: LeBron James)" required>
+    <button type="submit">Buscar</button>
+</form>
+
+{% if stats %}
+    <div class="card">
+        <h2>Resultado:</h2>
+        <p><strong>Nombre:</strong> {{ stats.first_name }} {{ stats.last_name }}</p>
+        <p><strong>ID:</strong> {{ stats.id }}</p>
+        <p><strong>Equipo:</strong> {{ stats.team.full_name }}</p>
+    </div>
+{% endif %}
+
+</body>
+</html>
