@@ -53,7 +53,7 @@
     <h1>Buscador de Jugadores NBA</h1>
 
     <div class="form-box">
-        <form method="POST">
+        <form method="POST" action="/">
             <input type="text" name="player" placeholder="Ejemplo: LeBron James">
             <button type="submit">Buscar</button>
         </form>
@@ -61,15 +61,15 @@
 
     {% if stats %}
     <div class="card">
-        <h2>{{ stats.firstname }} {{ stats.lastname }}</h2>
+        <h2>{{ stats.player.firstname }} {{ stats.player.lastname }}</h2>
 
         {% if stats.team %}
             <p><strong>Equipo:</strong> {{ stats.team.name }}</p>
         {% endif %}
 
-        <p><strong>Altura:</strong> {{ stats.height }} cm</p>
-        <p><strong>Peso:</strong> {{ stats.weight }} kg</p>
-        <p><strong>Edad:</strong> {{ stats.age }}</p>
+        <p><strong>Altura:</strong> {{ stats.player.height }}</p>
+        <p><strong>Peso:</strong> {{ stats.player.weight }}</p>
+        <p><strong>Edad:</strong> {{ stats.player.age }}</p>
     </div>
     {% else %}
         {% if stats is not none %}
