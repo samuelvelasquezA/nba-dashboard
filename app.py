@@ -3,6 +3,8 @@ import requests
 
 app = Flask(__name__)
 
+BALDONTLIE_URL = "https://api.balldontlie.io/v1/players?search={}"
+
 @app.route("/", methods=["GET", "POST"])
 def index():
     stats = None
@@ -10,11 +12,20 @@ def index():
     if request.method == "POST":
         player = request.form["player"]
 
-        # Esto es temporal: prueba de funcionamiento.
-        # Luego yo te lo reemplazo con TODAS las funciones reales.
-        url = f"https://www.balldontlie.io/api/v1/players?search={player}"
-        data = requests.get(url).json()
+        # --- NUEVO MÉTODO: evita errores 500 en Render ---
+        try:
+            url = BALDONTLIE_URL.format(player)
+            response = requests.get(url)
 
+            if response.status_code == 200:
+                data = response.json()
+            else:
+                data = {"data": []}
+
+        except:
+            data = {"data": []}
+
+        # Resultado
         if data["data"]:
             stats = data["data"][0]
         else:
