@@ -1,37 +1,51 @@
+
 from flask import Flask, render_template, request
 import requests
+import os
 
 app = Flask(__name__)
 
-BALDONTLIE_URL = "https://api.balldontlie.io/v1/players?search={}"
+API_KEY = "cb6ffc313a4970c3110fb44b919cc341"   # ← Tu KEY
+API_URL = "https://v1.basketball.api-sports.io/players"
+
+HEADERS = {
+    "x-apisports-key": API_KEY,
+    "x-apisports-host": "v1.basketball.api-sports.io"
+}
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    stats = None
+    player_stats = None
+    error = None
 
     if request.method == "POST":
-        player = request.form["player"]
+        player_name = request.form["player"]
 
-        # --- NUEVO MÉTODO: evita errores 500 en Render ---
         try:
-            url = BALDONTLIE_URL.format(player)
-            response = requests.get(url)
+            # 🔍 Buscar jugador por nombre
+            response = requests.get(
+                API_URL,
+                headers=HEADERS,
+                params={"search": player_name, "league": 12, "season": 2024}  # NBA = league 12
+            )
 
-            if response.status_code == 200:
-                data = response.json()
+            if response.status_code != 200:
+                error = "API Error"
+                return render_template("index.html", stats=None, error=error)
+
+            data = response.json()
+
+            if data["response"]:
+                player_stats = data["response"][0]   # Primer match
             else:
-                data = {"data": []}
+                error = "Jugador no encontrado"
 
-        except:
-            data = {"data": []}
+        except Exception as e:
+            error = f"Error: {str(e)}"
 
-        # Resultado
-        if data["data"]:
-            stats = data["data"][0]
-        else:
-            stats = {"name": "No encontrado"}
+    return render_template("index.html", stats=player_stats, error=error)
 
-    return render_template("index.html", stats=stats)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+
