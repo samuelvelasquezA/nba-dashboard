@@ -46,6 +46,16 @@
             width: 400px;
             margin: 20px auto;
         }
+
+        .debug-box {
+            background: #222;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 30px;
+            white-space: pre-wrap;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -53,7 +63,7 @@
     <h1>Buscador de Jugadores NBA</h1>
 
     <div class="form-box">
-        <form method="POST" action="/">
+        <form method="POST">
             <input type="text" name="player" placeholder="Ejemplo: LeBron James">
             <button type="submit">Buscar</button>
         </form>
@@ -61,20 +71,25 @@
 
     {% if stats %}
     <div class="card">
-        <h2>{{ stats.player.firstname }} {{ stats.player.lastname }}</h2>
+        <h2>{{ stats.firstname }} {{ stats.lastname }}</h2>
 
         {% if stats.team %}
             <p><strong>Equipo:</strong> {{ stats.team.name }}</p>
         {% endif %}
 
-        <p><strong>Altura:</strong> {{ stats.player.height }}</p>
-        <p><strong>Peso:</strong> {{ stats.player.weight }}</p>
-        <p><strong>Edad:</strong> {{ stats.player.age }}</p>
+        <p><strong>Altura:</strong> {{ stats.height }}</p>
+        <p><strong>Peso:</strong> {{ stats.weight }}</p>
+        <p><strong>Edad:</strong> {{ stats.age }}</p>
     </div>
-    {% else %}
-        {% if stats is not none %}
-            <p style="text-align:center; color:red;">Jugador no encontrado</p>
-        {% endif %}
+    {% elif stats is not none %}
+        <p style="text-align:center; color:red;">Jugador no encontrado</p>
+    {% endif %}
+
+    <!-- 🔥 BLOQUE DE DEPURACIÓN: MUESTRA RESPUESTA REAL DE LA API -->
+    {% if raw_api %}
+    <div class="debug-box">
+        {{ raw_api }}
+    </div>
     {% endif %}
 
 </body>
